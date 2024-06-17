@@ -57,6 +57,9 @@
 
     flake-registry.url = "github:NixOS/flake-registry";
     flake-registry.flake = false;
+
+    nur-niwa.url = "github:Meandres/nur-niwa";
+    nur-niwa.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =

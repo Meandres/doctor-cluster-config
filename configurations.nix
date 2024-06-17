@@ -12,6 +12,7 @@ let
     disko
     nix-index-database
     buildbot-nix
+    nur-niwa
     ;
   nixosSystem = nixpkgs.lib.makeOverridable nixpkgs.lib.nixosSystem;
 

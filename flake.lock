@@ -13,11 +13,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1717638331,
-        "narHash": "sha256-ikwAuKry4EGsKjp7+7Du5bKFvx7mrNch67iczo//YQg=",
+        "lastModified": 1717749509,
+        "narHash": "sha256-rzss2EuyT/RFX/5LUVBDhIivIlhBd7Y5JgUdumzKP0A=",
         "owner": "Mic92",
         "repo": "buildbot-nix",
-        "rev": "46a33f9b2ad1cb836721b2eea0629ed23b86cb61",
+        "rev": "b0526ceab2ec89bed5e194a206391a7d85a833e7",
         "type": "github"
       },
       "original": {
@@ -103,6 +103,24 @@
         "type": "github"
       }
     },
+    "flake-utils": {
+      "inputs": {
+        "systems": "systems"
+      },
+      "locked": {
+        "lastModified": 1710146030,
+        "narHash": "sha256-SZ5L6eA7HJ/nmkzGG7/ISclqe6oZdOZTNoesiInkXPQ=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "b1d9ab70662946ef0850d488da1c9019f3a9752a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -131,11 +149,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1717297675,
-        "narHash": "sha256-43UmlS1Ifx17y93/Vc258U7bOlAAIZbu8dsGDHOIIr0=",
+        "lastModified": 1717744769,
+        "narHash": "sha256-1usk5faO+KRn/03xKW3G3ex9/wHeLfwKTa7x8QNcygc=",
         "owner": "Mic92",
         "repo": "nix-index-database",
-        "rev": "972a52bee3991ae1f1899e6452e0d7c01ee566d9",
+        "rev": "4ac3639cebb6286f1a68d015b80e9e0c6c869ce6",
         "type": "github"
       },
       "original": {
@@ -285,6 +303,27 @@
         "type": "github"
       }
     },
+    "nur-niwa": {
+      "inputs": {
+        "flake-utils": "flake-utils",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1716906371,
+        "narHash": "sha256-cHMQ4XBnxQ+5nY1q4ZrpTtHfTY/tj0SIRgx3qIpwSWQ=",
+        "owner": "Meandres",
+        "repo": "nur-niwa",
+        "rev": "1aa85e5597da48dfea76f095722d7ad5137af39a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Meandres",
+        "repo": "nur-niwa",
+        "type": "github"
+      }
+    },
     "retiolum": {
       "locked": {
         "lastModified": 1715540413,
@@ -312,6 +351,7 @@
         "nixos-generators": "nixos-generators",
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs",
+        "nur-niwa": "nur-niwa",
         "retiolum": "retiolum",
         "sops-nix": "sops-nix",
         "srvos": "srvos",
@@ -356,6 +396,21 @@
       "original": {
         "owner": "numtide",
         "repo": "srvos",
+        "type": "github"
+      }
+    },
+    "systems": {
+      "locked": {
+        "lastModified": 1681028828,
+        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+        "owner": "nix-systems",
+        "repo": "default",
+        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-systems",
+        "repo": "default",
         "type": "github"
       }
     },
