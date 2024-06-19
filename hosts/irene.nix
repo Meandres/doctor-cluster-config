@@ -6,6 +6,7 @@
     ../modules/nfs/client.nix
     ../modules/vfio/iommu-amd.nix
     ../modules/dpdk.nix
+    ../modules/vhive/vhive.nix
   ];
 
   # General
@@ -21,7 +22,7 @@
   boot.kernel.sysctl = { "vm.overcommit_memory" = 1; };
 
   # ukbpf related stuff
-  virtualisation.containerd = {
+  /*virtualisation.containerd = {
     enable = true;
     settings = {
         version = 2;
@@ -39,19 +40,30 @@
                 pod_annotations = ["com.urunc.unikernel.*"];
                 options = {
                     #SystemdCgroup = true;
-                    BinaryName = inputs.nur-niwa.packages.${pkgs.system}.urunc;
+                    BinaryName = inputs.nur-niwa.packages.${pkgs.system}.urunc+"/bin/urunc";
                 };
             };
         };
     };
   };
   systemd.services.containerd.path = [ pkgs.containerd inputs.nur-niwa.packages.${pkgs.system}.urunc pkgs.runc pkgs.cni pkgs.cni-plugins pkgs.iptables pkgs.qemu_full ];
+
+  systemd.services.buildkitd = {
+    enable = true;
+    path = [ pkgs.buildkit pkgs.runc ];
+    after = [ "containerd.target" ];
+    serviceConfig = {
+      ExecStart = "${pkgs.buildkit}/bin/buildkitd";
+    };
+  };*/
   environment.systemPackages = [
-    pkgs.iptables
-    pkgs.nerdctl
-    pkgs.qemu_full
-    inputs.nur-niwa.packages.${pkgs.system}.bima
-    inputs.nur-niwa.packages.${pkgs.system}.urunc
+    #pkgs.iptables
+    #pkgs.nerdctl
+    #pkgs.qemu_full
+    #inputs.nur-niwa.packages.${pkgs.system}.bima
+    #inputs.nur-niwa.packages.${pkgs.system}.urunc
+    #pkgs.buildkit
+    inputs.nur-niwa.packages.${pkgs.system}.vhive
   ];
 
 }
