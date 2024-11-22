@@ -6,7 +6,7 @@ There are several ways to access the servers:
 - Via SSH jump host: **recommended for ssh**, **required for students**
   - We have one Proxy jump host that contains all SSH keys that are added to the nixos configuration i.e. in modules/users.nix
   - Reproducible example: `SSH_AUTH_SOCK= ssh -v -F /dev/null -i <path/to/privkey> -oProxyCommand="ssh tunnel@login.dos.cit.tum.de -i <path/to/privkey> -W %h:%p" <yourusername>@graham.dos.cit.tum.de`
-  - Keys are uploaded via the machine bill whenever nixos configuration is updated.
+  - Keys are uploaded via the machine astrid whenever nixos configuration is updated.
   - You can generate an SSH config file for all TUM hosts with [this script](./gen-ssh-config.sh), providing your username as an argument
 - VPN provided by RBG: **recommended for admins**
   - this option only works for ls1 employes
@@ -18,7 +18,7 @@ All servers in TUM have public ipv6/ipv4 addresses and dns record following the 
 - `$hostname.dos.cit.tum.de` for the machine itself.
 - `$hostname-mgmt.dos.cit.tum.de` for the IPMI/BMC interface.
 
-i.e. bill has the addresses `bill.dos.cit.tum.de` and `bill-mgmt.dos.cit.tum.de`.
+i.e. astrid has the addresses `astrid.dos.cit.tum.de` and `astrid-mgmt.dos.cit.tum.de`.
 
 # Management Interfaces
 
@@ -65,22 +65,29 @@ Those servers (or individual devices) are sometimes used exclusively by a single
   - [jack](./hosts/jack.md)
 - dual socket Xeon Gold 6438Y+, CXL support
   - [xavier](./hosts/xavier.md)
+- dual socket Xeon Platinum 8562Y+
+  - [ian](./hosts/ian.md)
 
 **Note**: these servers are equipped with Persistent Memory (PM).
 For information on how to setup the PM in App-Direct mode, please see [here](./SETUP_PM.md)
 
 ## Servers used for NFS/Services
 
-- [bill](./hosts/bill.md)
-- [nardole](./hosts/nardole.md)
 
 ## CI servers
 
-Those serve as a github action runner for Systemprogramming + cloud systems lab
+Those serve as a github action runner for Systemprogramming + cloud systems lab.
+Astrid also hosts the buildbot master server with Graham as the buildbot worker.
 
 - [astrid](./hosts/astrid.md)
-- [dan](./hosts/dan.md)
-- [mickey](./hosts/mickey.md)
+- [dan](./hosts/dan.md), nfs backup
+- [mickey](./hosts/mickey.md), nfs primary
+
+
+## Retired Server (offline)
+
+- [bill](./hosts/bill.md)
+- [nardole](./hosts/nardole.md)
 
 ## ARM64
 
@@ -95,9 +102,6 @@ Those serve as a github action runner for Systemprogramming + cloud systems lab
 - tegan.dos.cit.tum.de [tegan.nix](./hosts/tegan.nix), Milk-V Pioneer
 
 ## Morello (ARM64)
-
-Currently, these machines run CheriBSD and are managed by [@martin-fink](https://github.com/martin-fink).
-Accounts and ssh keys need to be added manually.
 
 - [ace](./hosts/ace.md) (Morello)
 
@@ -115,7 +119,7 @@ machines. Those machines also are not backed up.
 ## Others
 
 - RBG VMs:
-  - monitoring.dos.cit.tum.de/doctor.r [doctor.nix](../hosts/doctor.nix): borg backup target, monitoring
+  - monitoring.dos.cit.tum.de (VM), doctor.r (container in VM) [doctor.nix](../hosts/doctor.nix): borg backup target, monitoring
     - [prometheus](https://prometheus.dse.in.tum.de)
     - [alertmanager](https://alertmanager.dse.in.tum.de)
     - [buildbot](https://buildbot.dse.in.tum.de)
@@ -125,7 +129,7 @@ machines. Those machines also are not backed up.
 # Storage
 
 We have a shared nfs-based `/home` mounted. The nfs for /home is based on a NVME
-disk on nardole and is limited to 3.5TB.
+disk on mickey and is limited to 1.5TB.
 Please do not store large amounts of data such as VM images here. VM images of
 running VMs will also interfere with the Backupsoftware.
 Instead if you need fast local disk access use `/scratch/$YOURUSER`
@@ -134,10 +138,10 @@ not included in the backup.
 If you want to share larger datasets between
 machines use `/share`, which is based on two hard disk (15TB capacity).
 
-Both nfs export stored on `nardole` are also replicated to `bill` every 15
+Both nfs export stored on `mickey` are also replicated to `dan` every 15
 minutes using zfs replication based on
 [syncoid](https://github.com/TUM-DSE/doctor-cluster-config/blob/master/modules/nfs/server-backup.nix).
-In case there are hardware problems with `nardole`, `bill` can take over serving
+In case there are hardware problems with `mickey`, `dan` can take over serving
 the nfs.
 
 ## Adding non-nixos hosts to NFS.

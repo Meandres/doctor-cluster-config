@@ -1,3 +1,4 @@
+{ config, lib, ... }:
 let
 
   manosKeys = [
@@ -49,9 +50,7 @@ let
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHM2c6Z1MvCqi75iKSbZDUCWnNEwxmU9hoXKDCk//qBo dimstav23@lenovo"
   ];
 
-  felixKeys = [
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOtPYKJOWfanR0dTkoQuYWA7XtiiPiVTYqpldjIuEk4w"
-  ];
+  felixKeys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOtPYKJOWfanR0dTkoQuYWA7XtiiPiVTYqpldjIuEk4w" ];
 
   harshanavkisKeys = [
     "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCk5NDpY5ZdeUZl1jwiPuUgDad9i9oKxq2Ocm/P2Nf6SVMgl6aaiWEPzS7QfkZpOCqwtBqnBdUoykvQ8RwGCBoA7H9KiV0laqZFIbdNmiFKhZX4KQk8WVVxBlVgUIpLfp1eN7iu1PX0shO7/+zkObF2lAP2XMWpPOanfB1sHS2Um4AdEaYo+4QlUdrBS3WwBDLnuZdsG6B3CfAfVdj+zuJALnKdd/p+HUzDKD031SFGYUT7pzvsOVkmrvNbSv3l2dbVUKVjC7NDTMb3tk0iIGT5RdyYNth6mdR4EgtjNl+vZqWiM/1wRoY7SZ1gmSaXkgNNU3DM9tU7IHc0JFGXjRCxdNVy8EuxZ0f/szvVt9RyuCizkpJ6WJBKjqX651uDLxNJ4FV2qTK4jBANKpWVt5J4BIjCeIOCTSsRoW61WSefQy2LovHr/1B9/vmYsOsicYOd41lcCjJ1AuHIY6HzYS7nvxaFHoC0hvxJsFgCxHUHjDqjfuRaiBthtZu/2cRWcJybYWmsfRn7cKPKFNo7VscC1Hu0YVyKQMxyzq1y9lC54IXjoFrnkicUYYLA6jU5qwoadvPqCSnGfOZBKSW1gFOZYfGKlf0u/CDCqdm1IfVGXQwONzJaELhpmV9bcING0cXLs+XfLe5kPhg7vXb8qHTgC37Jtodf/+s3M4SbW7WA4w== hvub@hack-haven"
@@ -63,6 +62,7 @@ let
     "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDQKfHPI48+W3BKOeotOcAVLDh1TMWCqEy6Ltq2te/NPgoommDqqfnTDBf1lt6ShUG44H8V3VEJapyC/JhA6l3MfJPBCGqdHgBx+ECEn2lsUX3NY4n5fhNph4L/cZpI4JyI+mbRJFAXMMvSV52OXKgx8/Sp+BIthZ7CpwOVpTFEfu/5j7NFE7c2T/iXL8NwmzoV7b9EfLGd+Y5MBtQSxwLGoHIv7+aan/boj65mY0x99exJN/MSDjQe1bjxE9hUD4xYC5XRnUl6XSrPWtQWFfwXnuYLxT177L6V7TEsfZ6EV/GeVuoJpizVxIiN/oImrf1PWPCucr5DFXcWkVQ+QClN chenjiyang@victus"
     "sh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDCKzDeT4zRveNXCt3D2+pllN/3HaY9iPTO86Rn5CDHW chenjiyang1991@gmail.com"
     "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC8gXtpJq6uxzK2fWP5GkF1O2ESetKBbDNRjvzvG/yfFbyaTlwtC1JRydC7gbZKLSAVBk1mjO2tNbQ413rpqP9qVufPu68Wj0T2ZzfxtVGdBhk8j/AlG7s71KoH0mu57MLt5Ar2L9tLPLJChmzJP/bc5mIDlPUtiJ7+n3nVU3DsFRt+w13cQ+iHAvTxKVTjPVacrIorhHAeUw4KOD3wnuPEtYqzFnmizzDFFxP2AoivC5aQ0xtIgdoCSG1YBvn3SQzaF55JnO8wmk+OMJ8EKucwkdf6JyoTM/3oh1wxHOSj9jaIfLT4YDonDcPgivbueWxQj7Qjos31P9Ult5Uy7hLtgfVNbXAzjjSkQGQYt06/WNORSJJ5jdTdODjXRfDHXBudugEM3J8fspyHGaViPaHujkiNheRK9OR58zIG6omXwraMYbXqACQvOqZ74r3nOE8MxNdGhSq5GsiDJ/lNYh5XWCbMt8+NtmhbUAcMYbtLSLcPKyX8zTdjAM+JN37neKuS94vZCigh8V3AwHx/PGh8W7pkWHYwXmNeiWgBsbWcckzoY+OSCDj1zTUsDioMefvVM4gESMdfq/Uw1XhKyO2adnooQKDNVNPlXdYORQaLyfEuEecNHmBQ8Lsdc8IwXUG2AHwPXG5E7N8Gqo6ArTJAPfao6eGAoAUFmaKRg0GL4Q== chenjiyang1991@gmail.com"
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGIF9KqClQkDcQ0P+/EOBB99k5vO/iqp5MXDmrxvS1PT chenjiyang1991@gmail.com"
   ];
 
   cmainasKeys = [
@@ -101,15 +101,35 @@ let
     "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCqbnkl4OVgJGhO/CRhPnnMCsHGAE77jnbpWMoCLniKNgqLVwPBpevfJed9gwmrUdUKnAdvKP/+EIUMydjqC1VkYVXB0oNWd372hpxOmu9lYziXwQA7m0R2b8VhKwE3KXg2kZfDq8vW35ZQ5F/jGmMwBVSRuYP2cBo0BBMlEniYhgiPlUT7TzPttx0TmSCDUCj9CaSZ3rAGbyjT7ezcFFAQQEMd0EYvSa04B12EpYNLKf1rIcMrEEOUn7pwwF1kbpSLvVeP+0FnxokxiSlKKCKNMB2igE4ahJI2XH2HMTb20Ce/NKwGU79ZwWnwtsjXJV+qoqmh5VSyzKlwfBvELLNR anatole@MSI_GX740"
   ];
 
-  teofilKeys = [
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINkwdkIadTpo9JCWnxwtTiQu/PmQW7W4wAYZtVNGAqZK"
-  ];
+  teofilKeys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINkwdkIadTpo9JCWnxwtTiQu/PmQW7W4wAYZtVNGAqZK" ];
 
   oguzcanKeys = [
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINxXOIbR/HN6LEC8xKB9lP/BRp9VcWbKiPOxIUFRnT3B oguzcan.kirmemis@gmail.com"
   ];
 
-  extraGroups = [ "wheel" "docker" "plugdev" "vboxusers" "adbusers" "input" "staff" ];
+  nicoloKeys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIB2SyU4I0uC/qjsK2En6WNwnGaf05UGYKv8Yq0iMJcIg nicarp@TUM-Thinkpad"
+  ];
+
+  davidKeys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEFUUZ0oaGY1C/SdZvNYKZEnqFLFNWX2wWMktD33fSM+ david@David-TUM"
+  ];
+
+  mfKeys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINK0/PSpRypoFe8NQ1BHjCyxraIvhX/0q6OIO7DYnmyq Martin Fink"
+    "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBCshvYXlVtnaApJlB5BFhfZLWXnY4/9JKdNf3PFuPV8ZKU2Ssk7uAR5O5COVKDb9HnvArF7v+eoxKFmhwGXnlEU= Martin Fink"
+    "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBHGipyrOUVsSJNF2b944RUj1ywfdKqsgAhJW4rBbyjOPV2gx5LVLB5M9Cq71WBJIdmxOJ1slAtHhb0QI6JFjCTU= Martin Fink"
+  ];
+
+  extraGroups = [
+    "wheel"
+    "docker"
+    "plugdev"
+    "vboxusers"
+    "adbusers"
+    "input"
+    "staff"
+  ];
 in
 {
   config = {
@@ -186,6 +206,16 @@ in
         shell = "/run/current-system/sw/bin/bash";
         uid = 1012;
         openssh.authorizedKeys.keys = atsushiKeys;
+      };
+
+      # Martin Fink
+      martin = {
+        isNormalUser = true;
+        home = "/home/martin";
+        inherit extraGroups;
+        shell = "/run/current-system/sw/bin/zsh";
+        uid = 1016;
+        openssh.authorizedKeys.keys = mfKeys;
       };
 
       # Jiyang Chen
@@ -277,7 +307,10 @@ in
       ilya = {
         isNormalUser = true;
         home = "/home/ilya";
-        extraGroups = extraGroups ++ [ "kvm" ];
+        extraGroups = extraGroups ++ [
+          "kvm"
+          "elasticsearch"
+        ];
         shell = "/run/current-system/sw/bin/bash";
         uid = 1030;
         openssh.authorizedKeys.keys = ilyaKeys;
@@ -316,13 +349,36 @@ in
         openssh.authorizedKeys.keys = oguzcanKeys;
       };
 
-      root = {
-        openssh.authorizedKeys.keys = harshanavkisKeys
-          ++ dimitraKeys
-          ++ dimitriosKeys
-          ++ redhaKeys
-          ++ felixKeys;
+      # Nicolo Carpentieri
+      # tum
+      nicolo = {
+        isNormalUser = true;
+        home = "/home/nicolo";
+        inherit extraGroups;
+        shell = "/run/current-system/sw/bin/bash";
+        uid = 1034;
+        openssh.authorizedKeys.keys = nicoloKeys;
       };
+
+      # David Schall
+      # tum
+      david = {
+        isNormalUser = true;
+        home = "/home/david";
+        inherit extraGroups;
+        shell = "/run/current-system/sw/bin/bash";
+        uid = 1035;
+        openssh.authorizedKeys.keys = davidKeys;
+      };
+
+      # add staff to root account as well
+      root.openssh.authorizedKeys.keys =
+        let
+          staff = builtins.filter (user: builtins.elem "staff" user.extraGroups) (
+            builtins.attrValues config.users.users
+          );
+        in
+        lib.concatMap (user: user.openssh.authorizedKeys.keys) staff;
     };
 
     # DANGER ZONE!
@@ -333,6 +389,11 @@ in
       "matthias"
     ];
 
-    nix.settings.trusted-users = [ "joerg" "harshanavkis" "sandro" "redha" ];
+    nix.settings.trusted-users = [
+      "joerg"
+      "harshanavkis"
+      "sandro"
+      "redha"
+    ];
   };
 }

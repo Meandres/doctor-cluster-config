@@ -1,5 +1,6 @@
 # this is the mifcom tower pc
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   imports = [
     ../modules/hardware/mifcom-tower.nix
     ../modules/disko-zfs-ubuntu.nix
@@ -10,7 +11,15 @@
   # everyone with physical access:
   users.users."ls1.internet" = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "docker" "plugdev" "vboxusers" "adbusers" "input" "admin" ];
+    extraGroups = [
+      "wheel"
+      "docker"
+      "plugdev"
+      "vboxusers"
+      "adbusers"
+      "input"
+      "admin"
+    ];
     password = "ls1.internet";
   };
 
@@ -25,13 +34,12 @@
   environment.systemPackages = with pkgs; [
     # fprintd # seems to brick the login screen on ThinkPad E14 amd
     gnome.gnome-terminal
-    gnome.gedit
+    gedit
     remmina # rdp/vnc client
     alacritty
     wezterm
     firefox
   ];
-
 
   networking.hostName = "vicki";
 

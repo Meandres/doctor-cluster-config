@@ -6,7 +6,7 @@
     ../modules/nfs/client.nix
     ../modules/vfio/iommu-amd.nix
     ../modules/dpdk.nix
-    ../modules/vhive/vhive.nix
+    ../modules/elasticsearch.nix
   ];
 
   # General
@@ -19,51 +19,11 @@
   # udos related stuff
   # Use the PCI 5.0 SSD for the experiments. This lines binds it automatically to vfio
   #virtualisation.vfio.devices = [ "1e0f:0013" ]; 
-  boot.kernel.sysctl = { "vm.overcommit_memory" = 1; };
-
-  # ukbpf related stuff
-  /*virtualisation.containerd = {
-    enable = true;
-    settings = {
-        version = 2;
-        plugins."io.containerd.grpc.v1.cri".containerd = {
-            runtimes.runc = {
-                runtime_type = "io.containerd.runc.v2";
-                options = {
-                    SystemdCgroup = true;
-                    BinaryName = pkgs.runc;
-                };
-            };
-            runtimes.urunc = {
-                runtime_type = "io.containerd.urunc.v2";
-                container_annotations = ["com.urunc.unikernel.*"];
-                pod_annotations = ["com.urunc.unikernel.*"];
-                options = {
-                    #SystemdCgroup = true;
-                    BinaryName = inputs.nur-niwa.packages.${pkgs.system}.urunc+"/bin/urunc";
-                };
-            };
-        };
-    };
+  boot.kernel.sysctl = {
+    "vm.overcommit_memory" = 1;
   };
-  systemd.services.containerd.path = [ pkgs.containerd inputs.nur-niwa.packages.${pkgs.system}.urunc pkgs.runc pkgs.cni pkgs.cni-plugins pkgs.iptables pkgs.qemu_full ];
 
-  systemd.services.buildkitd = {
-    enable = true;
-    path = [ pkgs.buildkit pkgs.runc ];
-    after = [ "containerd.target" ];
-    serviceConfig = {
-      ExecStart = "${pkgs.buildkit}/bin/buildkitd";
-    };
-  };*/
-  environment.systemPackages = [
-    #pkgs.iptables
-    #pkgs.nerdctl
-    #pkgs.qemu_full
-    #inputs.nur-niwa.packages.${pkgs.system}.bima
-    #inputs.nur-niwa.packages.${pkgs.system}.urunc
-    #pkgs.buildkit
-    inputs.nur-niwa.packages.${pkgs.system}.vhive
-  ];
-
+  system.stateVersion = "22.11";
+  simd.arch = "znver4";
+  services.envfs.enable = true;
 }

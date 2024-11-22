@@ -105,8 +105,7 @@ let
     extraPatches = [ ];
   };
 
-
-  snp_latest = {
+  snp_6_6 = {
     owner = "AMDESE";
     repo = "linux";
     rev = "5a170ce1a08259ac57a9074e1e7a170d6b8c0cda";
@@ -115,8 +114,54 @@ let
     modDirVersion = "6.6.0-rc1";
     extraPatches = [ ];
   };
+
+  snp_6_8 = {
+    owner = "mmisono";
+    repo = "linux";
+    # branch: snp-host-latest-20240221
+    rev = "cc2568386ccb5b0d7a46b35dc2fad3412d3aad26";
+    sha256 = "sha256-jlUGfGqPJcEit7BMOfnQYq8QsLutiPm8vP7anUcVcHs=";
+    version = "6.8";
+    modDirVersion = "6.8.0-rc5-next-20240221";
+    extraPatches = [ ];
+  };
+
+  snp_6_9 = {
+    owner = "mmisono";
+    repo = "linux";
+    # branch: snp-host-latest-20240514
+    rev = "05b10142ac6a1a3b02d4be018e119c2648d1da6c";
+    sha256 = "sha256-ZEfGa2dbHlXWPbEzUmHrWTIifVt4PtkM+w1cHTzt7xw=";
+    version = "6.9";
+    modDirVersion = "6.9.0-rc7";
+    extraPatches = [ ];
+  };
+
+  snp_kvm_next = {
+    owner = "mmisono";
+    repo = "linux";
+    # branch: kvm-next-20240717
+    rev = "332d2c1d713e232e163386c35a3ba0c1b90df83f";
+    sha256 = "sha256-bkyJzgh8JU8uN7hF4HK0bUCQTaViDZcoWbH5pSM2v1Y=";
+    version = "6.10";
+    modDirVersion = "6.10.0-rc7";
+    extraPatches = [
+      { name = "tph2m"; patch = builtins.fetchurl "https://github.com/mdroth/linux/commit/d641eb88f61b57fe9a4522ea8eb1865fcb727d6e.patch";}
+    ];
+  };
+
+  snp_thp_611rc1 = {
+    owner = "mdroth";
+    repo = "linux";
+    # branch: snp-thp-611rc1
+    rev = "d641eb88f61b57fe9a4522ea8eb1865fcb727d6e";
+    sha256 = "sha256-0OgpsJ29+4jVcbtwJQaXPE+yzLTns8nUAO9RLkfM10s=";
+    version = "6.11";
+    modDirVersion = "6.11.0-rc1";
+    extraPatches = [ ];
+  };
 in
 # change here to change kernel
-# buildSNPKernel snp_5_19_rc6;
-# buildSNPKernel snp_6_1_rfc_v8;
-buildSNPKernel snp_latest
+#buildSNPKernel snp_5_19_rc6
+#buildSNPKernel snp_6_8
+buildSNPKernel snp_6_9

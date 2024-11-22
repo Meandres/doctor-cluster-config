@@ -2,9 +2,11 @@
   imports = [
     ../modules/ipmi-supermicro.nix
     ../modules/hardware/supermicro-AS-4124GS.nix
+    ../modules/disko-zfs.nix
     ../modules/nfs/client.nix
     ../modules/dpdk.nix
 
+    ../modules/amd_sev_snp.nix
     ../modules/xilinx.nix
     ../modules/xrdp.nix
     ../modules/xrdp-passwords.nix
@@ -23,6 +25,8 @@
   simd.arch = "znver3";
   system.stateVersion = "22.11";
 
+  networking.doctor-bridge.enable = true;
+
   # manually added to load xilinx from
   fileSystems."/share" = {
     device = "nfs:/export/share";
@@ -33,8 +37,10 @@
       "timeo=14"
     ];
   };
-  users.xrdpUsers = [ 
+  users.xrdpUsers = [
     "xilinx"
-    "atsushi" 
+    "atsushi"
+    "chenjiyang"
+    "anubhav"
   ];
 }

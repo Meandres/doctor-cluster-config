@@ -30,6 +30,8 @@ let
       ilya
       felix
       anatole
+      jiyang
+      martin
     ];
     all = builtins.attrValues (keys.users // keys.machines);
   };
@@ -49,7 +51,7 @@ let
       "hosts/adric.cfg.sops" = [ ];
     } //
     builtins.mapAttrs (name: value: (map (x: keys.machines.${x}) value)) {
-      "modules/nfs/secrets.yml$" = [ "bill" "nardole" ];
+      "modules/nfs/secrets.yml$" = [ "bill" "nardole" "mickey" ];
       "modules/k3s/secrets.yml$" = [ "astrid" "mickey" "dan" ];
     };
 

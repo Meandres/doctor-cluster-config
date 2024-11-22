@@ -1,7 +1,7 @@
-{ self, ... }:
+{ self, inputs, ... }:
 let
   inherit
-    (self.inputs)
+    (inputs)
     nixpkgs
     retiolum
     sops-nix
@@ -10,18 +10,13 @@ let
     nixos-hardware
     srvos
     disko
-    nix-index-database
-    buildbot-nix
-    nur-niwa
     ;
-  nixosSystem = nixpkgs.lib.makeOverridable nixpkgs.lib.nixosSystem;
+
+  nixosSystem = args: nixpkgs.lib.nixosSystem ({
+    specialArgs = { inherit self inputs; };
+  } // args);
 
   commonModules = [
-    {
-      _module.args.self = self;
-      _module.args.inputs = self.inputs;
-      srvos.flake = self;
-    }
     # only include admins here for monitoring/backup infrastructure
     ./modules/users/admins.nix
     ./modules/users/extra-user-options.nix
@@ -36,6 +31,8 @@ let
     ./modules/systemd.nix
     ./modules/cleanup-usr.nix
     ./modules/tinc.nix
+    ./modules/sshd
+    ./modules/register-flake.nix
 
     disko.nixosModules.disko
 
@@ -53,10 +50,6 @@ let
      }: let
        sopsFile = ./. + "/hosts/${config.networking.hostName}.yml";
     in {
-      nix.nixPath = [
-        "home-manager=${home-manager}"
-        "nixpkgs=${pkgs.path}"
-      ];
       # TODO: share nixpkgs for each machine to speed up local evaluation.
       #nixpkgs.pkgs = self.inputs.nixpkgs.legacyPackages.${system};
 
@@ -66,14 +59,6 @@ let
       };
       sops.defaultSopsFile = lib.mkIf (builtins.pathExists sopsFile) sopsFile;
 
-      nix.extraOptions = ''
-        flake-registry = ${flake-registry}/flake-registry.json
-      '';
-
-      nix.registry = {
-        home-manager.flake = home-manager;
-        nixpkgs.flake = nixpkgs;
-      };
       time.timeZone = "UTC";
     })
     retiolum.nixosModules.retiolum
@@ -93,7 +78,6 @@ let
       ./modules/qemu-bridge.nix
       ./modules/doctor-VMs.nix
       ./modules/lawful-access
-      nix-index-database.nixosModules.nix-index
       ./modules/nix-index.nix
     ];
 
@@ -149,7 +133,6 @@ in
         computeNodeModules
         ++ [
           ./hosts/bill.nix
-          buildbot-nix.nixosModules.buildbot-master
         ];
     };
 
@@ -178,7 +161,6 @@ in
         ++ [
           ./hosts/graham.nix
           nixos-hardware.nixosModules.dell-poweredge-r7515
-          buildbot-nix.nixosModules.buildbot-worker
         ];
     };
 
@@ -335,5 +317,22 @@ in
           ./hosts/tegan.nix
         ];
       };
+    ian = nixosSystem {
+        pkgs = pkgs-x86_64-linux;
+        modules =
+                computeNodeModules
+                ++ [
+                 ./hosts/ian.nix
+                ];
+        };
+    ace = nixosSystem {
+      pkgs = pkgs-aarch64-linux;
+      modules =
+        computeNodeModules
+        ++ [
+          ./hosts/ace.nix
+        ];
+    };
+
   };
 }

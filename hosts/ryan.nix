@@ -1,3 +1,4 @@
+{ lib, ... }:
 {
   imports = [
     ../modules/xilinx.nix
@@ -13,13 +14,14 @@
     #../modules/amd_sev_snp.nix
     ../modules/vfio/iommu-amd.nix
 
+    ../modules/kata-container
+
     # since the disk failure, ryan is partitioned with disko
-    ../modules/zfs-partitioning.nix
+    ../modules/disko-zfs.nix
   ];
 
   networking.hostName = "ryan";
-  disko.rootDisk = "/dev/sda";
-  # disko.noZfs = true;
+  disko.rootDisk = "/dev/disk/by-id/nvme-eui.36314130547000630025384100000002";
 
   # 10GbE NICs for network benchmarks:
   # Broadcom BCM57416 NetXtreme-E Dual-Media

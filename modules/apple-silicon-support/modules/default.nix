@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 {
   imports = [
     ./kernel
@@ -11,21 +16,30 @@
   config =
     let
       cfg = config.hardware.asahi;
-    in {
+    in
+    lib.mkIf cfg.enable {
       nixpkgs.overlays = lib.mkBefore [ cfg.overlay ];
 
       hardware.asahi.pkgs =
-        if cfg.pkgsSystem != "aarch64-linux"
-        then
+        if cfg.pkgsSystem != "aarch64-linux" then
           import (pkgs.path) {
             crossSystem.system = "aarch64-linux";
             localSystem.system = cfg.pkgsSystem;
             overlays = [ cfg.overlay ];
           }
-        else pkgs;
+        else
+          pkgs;
     };
 
   options.hardware.asahi = {
+    enable = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = ''
+        Enable the basic Asahi Linux components, such as kernel and boot setup.
+      '';
+    };
+
     pkgsSystem = lib.mkOption {
       type = lib.types.str;
       default = "aarch64-linux";

@@ -7,6 +7,8 @@
     ./students.nix
     # when we need to give external reviewers access for paper evaluation
     ./reviewers.nix
+    # devices that just connect and do port forwarding to allow for remote access
+    ./devices.nix
     # admins also have access to the monitoring / backup infrastructure
     ./admins.nix
 
@@ -22,14 +24,18 @@
     # we cannot use this since we no longer have the database
     programs.command-not-found.enable = false;
 
-    assertions = lib.flatten (lib.mapAttrsToList
-      (name: user: {
-        assertion = user.isSystemUser || lib.all (group: group != "student" || group != "staff" || group != "admin" || group != "reviewer") user.extraGroups;
+    assertions = lib.flatten (
+      lib.mapAttrsToList (name: user: {
+        assertion =
+          user.isSystemUser
+          || lib.all (
+            group: group != "student" || group != "staff" || group != "admin" || group != "reviewer"
+          ) user.extraGroups;
         message = ''
           User ${name} is not in the student, staff, reviewer or admin group.
           Please add them to the correct group.
         '';
-      })
-      config.users.users);
+      }) config.users.users
+    );
   };
 }

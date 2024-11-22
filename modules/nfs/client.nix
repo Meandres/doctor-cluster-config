@@ -1,4 +1,5 @@
-{ pkgs, ... }: let
+{ pkgs, ... }:
+let
   # example: mkNfsMounter nfs:/export/home /home
   mkNfsMounter = nfsUrl: mountpoint: {
     description = "Mount ${mountpoint}";
@@ -35,8 +36,16 @@
       RestartSec = 10;
     };
   };
-in {
+in
+{
   imports = [ ./. ];
+
+  environment.sessionVariables = {
+    # Since nix 2.20, nix stores a significant amount of data in $XDG_CACHE_HOME/nix because of the tarball cache.
+    XDG_CACHE_HOME = [ "/scratch/$USER/.cache" ];
+    # This fixes user profile generation i.e. used by home-manager
+    XDG_STATE_HOME = [ "/scratch/$USER/.local/share" ];
+  };
 
   # How should we mount NFS?
 

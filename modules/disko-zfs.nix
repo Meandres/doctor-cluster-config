@@ -1,9 +1,15 @@
- { lib, config, ... }: { 
+{ lib, config, ... }:
+{
   options = {
     disko.rootDisk = lib.mkOption {
       type = lib.types.str;
       default = "/dev/nvme0n1";
       description = "The device to use for the disk";
+    };
+    disko.zfs.legacyMounts.enable = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = "Enable legacy mountpoints for ZFS datasets";
     };
   };
   config = {
@@ -54,10 +60,12 @@
               type = "zfs_fs";
               mountpoint = "/";
               options."com.sun:auto-snapshot" = "true";
+              options."mountpoint" = lib.mkIf config.disko.zfs.legacyMounts.enable "legacy";
             };
             "root/tmp" = {
               type = "zfs_fs";
               mountpoint = "/tmp";
+              options.sync = "disabled";
             };
           };
         };

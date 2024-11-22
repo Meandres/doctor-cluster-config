@@ -2,12 +2,15 @@
   imports = [
     ../modules/ipmi-supermicro.nix
     ../modules/bonding.nix
-    ../modules/jumphost
-    ../modules/sys-prog/users.nix
-    ../modules/nfs/server.nix
-    ../modules/buildbot/master.nix
+
     ../modules/hardware/supermicro-X12SCZ-TLN4F.nix
-    #../modules/nfs/server.nix
+    ../modules/disko-zfs.nix
+    ../modules/nfs/client.nix
+    ../modules/dpdk.nix
+
+    ../modules/xilinx.nix
+    ../modules/xrdp.nix
+    ../modules/xrdp-passwords.nix
   ];
 
   networking.hostName = "bill";
@@ -16,11 +19,6 @@
     "b8:ce:f6:0b:ee:64"
     "b8:ce:f6:0b:ee:65"
   ];
-
-  programs.ssh.knownHosts = {
-    nardole.hostNames = [ "nfs" "nfs-backup" ];
-    nardole.publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICxBbS6tbc4KuS7sg/6py87kNhuI1s/sE1FtJpdQjzWJ";
-  };
 
   simd.arch = "skylake";
 
@@ -34,4 +32,20 @@
   '';
 
   system.stateVersion = "20.09";
+
+  disko.rootDisk = "/dev/disk/by-id/nvme-SAMSUNG_MZQL21T9HCJR-00A07_S64GNA0T724988";
+
+  boot.hugepages1GB.number = 8;
+
+  # manually added to load xilinx from
+  fileSystems."/share" = {
+    device = "nfs:/export/share";
+    fsType = "nfs4";
+    options = [
+      "nofail"
+      "ro"
+      "timeo=14"
+    ];
+  };
+
 }

@@ -1,15 +1,23 @@
-{ config
-, lib
-, ...
-}:
+{ config, lib, ... }:
 let
-  joergsKeys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKbBp2dH2X3dcU1zh+xW3ZsdYROKpJd3n13ssOP092qE joerg@turingmachine" ];
+  joergsKeys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKbBp2dH2X3dcU1zh+xW3ZsdYROKpJd3n13ssOP092qE joerg@turingmachine"
+    "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBCsjXKHCkpQT4LhWIdT0vDM/E/3tw/4KHTQcdJhyqPSH0FnwC8mfP2N9oHYFa2isw538kArd5ZMo5DD1ujL5dLk= ssh@secretive.Joerg's-Laptop.local"
+  ];
 
   okelmannKeys = [
     "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDITBcN9iw5Fn7yyfgiWFet3QWDoMcUNtzLi+PNoYS7jksvcKZy5pLOjE6wCpkbYx+Tcb4MyvoWPXvwdo5FfL4XdhZRO+JlZ66p/rGssq/wEr2BBUwohP7o39JLtiyXGXSsK6MO2aceOFLQr4KAdaeD8ST0XumGcV6bGqIbjFsK5FCxFhO8NkCFtavBjDwKUm3uyOnVCWMp12abUphzxrVtWhcsnw5GapohATP03mCNxmrn/L7x393HutxgjyduScX7++MjwVE6J7wCnztPUtJbh9jYemr/K9fBMBbLhQagOjrlQYGU5frgmLrPCRZusyg5HjWx6gJIxs/DskfgmW+V"
   ];
 
-  extraGroups = [ "wheel" "docker" "plugdev" "vboxusers" "adbusers" "input" "admin" ];
+  extraGroups = [
+    "wheel"
+    "docker"
+    "plugdev"
+    "vboxusers"
+    "adbusers"
+    "input"
+    "admin"
+  ];
 in
 {
   config = {
@@ -42,6 +50,9 @@ in
       };
     };
 
-    nix.settings.trusted-users = [ "joerg" "okelmann" ];
+    nix.settings.trusted-users = [
+      "joerg"
+      "okelmann"
+    ];
   };
 }

@@ -11,7 +11,7 @@ import tempfile
 from pathlib import Path
 from typing import IO, Any, Callable, List
 
-from deploykit import DeployGroup, DeployHost
+from deploykit import DeployGroup, DeployHost, HostKeyCheck
 from invoke import task
 
 ROOT = Path(__file__).parent.resolve()
@@ -158,10 +158,10 @@ def document_cards(hosts: DeployGroup) -> str:
         for line in inxi_slots.stdout.splitlines():
             is_device_line = False
             # print slot description or "PCI Slots:"
-            if "status: Available" in line:
+            if "status: available" in line.lower():
                 line = f"- ✅{line}"
                 is_device_line = True
-            if "status: In Use" in line:
+            if "status: in use" in line.lower():
                 line = f"- ❌{line}"
                 is_device_line = True
             result += f"{line}   \n"
@@ -173,7 +173,14 @@ def document_cards(hosts: DeployGroup) -> str:
                     result += f"{descriptions.pop()}  \n"
         return f"### {h.host} \n\n{result} \n\n"
 
-    results = hosts.run_function(doc_cards)
+    def doc_cards_safe(h: DeployHost) -> str:
+        try:
+            return doc_cards(h)
+        except Exception as e:
+            print(f"Error: {e}")
+            return f"### {h.host} \n\nError: in fetching expansion card data (host offline?) \n\n"
+
+    results = hosts.run_function(doc_cards_safe)
     results2 = list(
         map(
             lambda result: result.result,
@@ -230,8 +237,6 @@ HOSTS = [
     "astrid.dos.cit.tum.de",
     "dan.dos.cit.tum.de",
     "mickey.dos.cit.tum.de",
-    "bill.dos.cit.tum.de",
-    "nardole.dos.cit.tum.de",
     "yasmin.dos.cit.tum.de",
     "graham.dos.cit.tum.de",
     "ryan.dos.cit.tum.de",
@@ -247,6 +252,7 @@ HOSTS = [
     "vislor.dos.cit.tum.de",
     "irene.dos.cit.tum.de",
     "xavier.dos.cit.tum.de",
+    "ian.dos.cit.tum.de",
 ]
 
 # used for different IPMI power readings
@@ -271,10 +277,6 @@ MANUFACTURERS = dict(
             "clara.dos.cit.tum.de",
             "amy.dos.cit.tum.de",
             "rose.dos.cit.tum.de",
-        ],
-        "supermicro_broken": [
-            "bill.dos.cit.tum.de",
-            "nardole.dos.cit.tum.de",
         ],
     }
 )
@@ -306,6 +308,25 @@ def deploy(c: Any) -> None:
 
 
 @task
+def generate_facter_json(c: Any, hosts: str = "") -> None:
+    """
+    Deploy to servers
+    """
+    def deploy(h: DeployHost) -> None:
+        ret = h.run(["nix", "run", "--refresh", "github:numtide/nixos-facter"], stdout=subprocess.PIPE)
+        name = h.host.split(".")[0]
+        path = ROOT / "hosts" / f"{name}-facter.json"
+        path.write_text(ret.stdout)
+
+    if hosts != "":
+        host_list = hosts.split(",")
+    else:
+        host_list = HOSTS
+    g = DeployGroup([DeployHost(h, user="root") for h in host_list])
+    g.run_function(deploy)
+
+
+@task
 def deploy_ruby(c: Any) -> None:
     """
     Deploy to riscv server
@@ -319,7 +340,7 @@ def deploy_ruby(c: Any) -> None:
             target_user="root",
             target_host="ruby.r",
             flake_attr="ruby",
-            config_dir="/var/lib/nixos-config",
+            flake_path="/var/lib/nixos-config",
         ),
     )
     deploy_nixos([host])
@@ -339,7 +360,7 @@ def deploy_tegan(c: Any) -> None:
             target_user="root",
             target_host="tegan.dos.cit.tum.de",
             flake_attr="tegan",
-            config_dir="/var/lib/nixos-config",
+            flake_path="/var/lib/nixos-config",
         ),
     )
     deploy_nixos([host])
@@ -351,7 +372,7 @@ def deploy_doctor(c: Any) -> None:
     Deploy to doctor
     """
     host = DeployHost(
-        "localhost",
+        "graham.dos.cit.tum.de",
         user="root",
         forward_agent=True,
         command_prefix="doctor",
@@ -359,7 +380,7 @@ def deploy_doctor(c: Any) -> None:
             target_user="root",
             target_host="doctor.r",
             flake_attr="doctor",
-            config_dir="/var/lib/nixos-config",
+            flake_path="/var/lib/nixos-config",
         ),
     )
     deploy_nixos([host])
@@ -482,6 +503,20 @@ def ssh_install_nixos(c: Any, machine: str, hostname: str) -> None:
             f"nix run github:nix-community/nixos-anywhere#nixos-anywhere -- --flake .#{machine} --extra-files {tmpdir} {hostname}",
             echo=True,
         )
+
+@task
+def install_ssh_hostkeys(c: Any, machine: str, hostname: str) -> None:
+    """
+    Install ssh host keys stored in sops files on a remote host, i.e. inv install-ssh-hostkeys --machine mickey --hostname mickey.dos.cit.tum.de
+    """
+    with tempfile.TemporaryDirectory() as tmpdir:
+        decrypt_host_keys(c, machine, tmpdir)
+        c.run("mkdir -p /etc/ssh", pty=True)
+        host = DeployHost(hostname, user="root")
+        cmds = []
+        for keyname in Path(f"{tmpdir}/etc/ssh").iterdir():
+            cmds.append(f"echo '{keyname.read_text()}' > /etc/ssh/{keyname.name}")
+        host.run(";".join(cmds))
 
 
 @task
@@ -751,6 +786,10 @@ def ipmi_serial(c: Any, host: str = "") -> None:
     Connect to the serial console of a server via IPMI
     """
     ipmitool(c, host, "sol info")
+    try:
+        ipmitool(c, host, "sol deactivate")
+    except Exception:
+        pass
     ipmitool(c, host, "sol activate")
 
 
@@ -839,7 +878,7 @@ def ipmi_boot_bios(c: Any, host: str = "") -> None:
 @task
 def ipmi_boot_pxe(c: Any, host: str = "") -> None:
     """
-    Set the next boot to bios and reboot
+    Set the next boot to pxe and reboot
     """
     ipmi_boot(c, host, "pxe")
 
@@ -885,6 +924,23 @@ def cleanup_gcroots(c: Any, hosts: str = "") -> None:
         g.run("find /nix/var/nix/gcroots/auto -type s -delete")
         g.run("systemctl restart nix-gc")
 
+
+@task
+def restore_host_keys(c: Any, host: str = "") -> None:
+    """
+    Restore host ssh keys based on sops files
+    """
+    key_files = [
+        "ssh_host_ed25519_key",
+        "ssh_host_ed25519_key.pub",
+        "ssh_host_rsa_key",
+        "ssh_host_rsa_key.pub",
+    ]
+    h = DeployHost(host, user="root", host_key_check=HostKeyCheck.NONE)
+    for key in key_files:
+        hostname = host.split(".")[0]
+        result = h.run_local(f"sops --extract '[\"{key}\"]' -d {ROOT}/hosts/{hostname}.yml", stdout=subprocess.PIPE)
+        h.run(f"echo '{result.stdout}' > /etc/ssh/{key}")
 
 @task
 def update_host_keys(c: Any, hosts: str = "") -> None:

@@ -1,4 +1,3 @@
-
 {
   imports = [
     ../modules/hardware/poweredge7625.nix
@@ -15,8 +14,9 @@
 
   system.stateVersion = "23.05";
 
+  networking.doctor-bridge.enable = true;
+
   boot.kernelParams = [
-    "isolcpus=0-31"
     "nvme.poll_queues=4"
     "nvme_core.multipath=N"
   ];

@@ -8,7 +8,7 @@
     ../modules/amd_sev.nix
     ../modules/dpdk.nix
     ../modules/vfio/iommu-amd.nix
-    ../modules/zfs-partitioning.nix
+    ../modules/disko-zfs.nix
   ];
 
   boot.hugepages1GB.number = 8;
@@ -35,4 +35,16 @@
   system.stateVersion = "21.05";
 
   networking.doctor-bridge.enable = true;
+
+  # Only allow port forwarding so we can connect remotely
+  services.openssh.extraConfig = ''
+    Match User pixel8
+        AllowTcpForwarding yes
+        X11Forwarding no
+        AllowAgentForwarding no
+        PermitTunnel no
+        PermitTTY no
+        PasswordAuthentication no
+    Match all # end match block
+  '';
 }

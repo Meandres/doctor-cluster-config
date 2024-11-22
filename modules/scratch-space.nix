@@ -1,8 +1,6 @@
 # R     /dir/to/remove/recursively               -    -    -     -           -
-{ lib
-, config
-, ...
-}: {
+{ lib, config, ... }:
+{
   # Create scratch space per user.
   # The scratch space is not backed up!
   # /scratch is stored on the local rootfs (usually zfs) instead of NFS
@@ -12,7 +10,7 @@
   #           of re-formatted in order to have consistent measurement results
   systemd.tmpfiles.rules =
     let
-      loginUsers = lib.filterAttrs (_n: v: v.isNormalUser) config.users.users;
+      loginUsers = lib.filterAttrs (_n: v: v.isNormalUser || v.name == "root") config.users.users;
     in
     (lib.mapAttrsToList (n: _v: "d /scratch/${n} 0755 ${n} users -") loginUsers)
     ++ (builtins.map (n: "R /scratch/${n} - - - - -") config.users.deletedUsers)
