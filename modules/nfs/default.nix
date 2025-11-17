@@ -12,6 +12,6 @@
       2a09:80c0:102::f000:0 nfs
       2a09:80c0:102::f000:1 nfs-backup
     '';
-    services.rpcbind.enable = lib.mkForce false; # rpcbind is not needed for our NFSv4 but can be used for DDoS amplification
+    services.rpcbind.enable = lib.mkForce true; # rpcbind is not needed for our NFSv4 but can be used for DDoS amplification
   };
 }
